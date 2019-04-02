@@ -3,6 +3,8 @@ const http = require('http'); //http code module
 const morgan = require('morgan'); // required to serve static file in the application
 const bodyParser = require('body-parser'); //parses the body of the request and adds to the object req.body
 
+const dishRouter = require('./routes/dishRouter');
+
 const hostname = 'localhost';
 const port = 3000;
 
@@ -11,37 +13,9 @@ const app = express(); //tell that our application will use the express node mod
 app.use(morgan('dev')); //development version - so print additional info
 app.use(bodyParser.json());
 
-//Express REST API methods
 // /dishes -> Endpoint
+app.use('/dishes', dishRouter);
 
-//This code will be executed every time an API is called
-app.all('/dishes', (req,res,next) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  next(); //operation not finished -> continue looking for the next one (e.g. PUT request)
-});
-
-//Specific to the kind of request
-//GET - get the info
-app.get('/dishes', (req,res,next) => {
-    res.end('Will send all the dishes to you!');
-});
-
-//POST - new dish
-app.post('/dishes', (req, res, next) => {
- res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
-});
-
-//PUT - Update existing dish
-app.put('/dishes', (req, res, next) => {
-  res.statusCode = 403;
-  res.end('PUT operation not supported on /dishes');
-});
-
-//DELETE - delete a dish
-app.delete('/dishes', (req, res, next) => {
-    res.end('Deleting all dishes');
-});
 
 //Doing the same thing for dishID
 app.get('/dishes/:dishId', (req,res,next) => {
